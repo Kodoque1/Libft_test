@@ -13,8 +13,8 @@ CFLAGS := -g3
 
 all: $(NAME)
 
-$(NAME): $(OBJ) 
-	$(CC) $(OBJ) -o -LLibft -lft $(NAME)
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(OBJ) -LLibft -lft -o $(NAME)
 
 $(LIBFT):
 	cd $(LIBFT_DIR); make;
