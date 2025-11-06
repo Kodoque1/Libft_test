@@ -82,11 +82,11 @@ void test_tolower(void)
     TEST_MSG("Expected: %s", "\\n");
     TEST_MSG("Found: %c", c);
     c = ft_tolower('a');
-    TEST_CHECK(c == 'a');
+    TEST_CHECK_(c == 'a', "Checking invariant");
     TEST_MSG("Expected: %s", "a");
     TEST_MSG("Found: %c", c);
     c = ft_tolower('A');
-    TEST_CHECK( c == 'a');
+    TEST_CHECK_( c == 'a', "Checking conversion");
     TEST_MSG("Expected: %s", "a");
     TEST_MSG("Found: %c", c);
 }
@@ -99,11 +99,11 @@ void test_toupper(void)
     TEST_MSG("Expected: %s", "\\n");
     TEST_MSG("Found: %c", c);
     c = ft_toupper('A');
-    TEST_CHECK( c == 'A');
+    TEST_CHECK_( c == 'A', "Checking invariant");
     TEST_MSG("Expected: %s", "A");
     TEST_MSG("Found: %c", c);
     c = ft_toupper('a');
-    TEST_CHECK(c == 'A');
+    TEST_CHECK_(c == 'A', "Checking conversion");
     TEST_MSG("Expected: %s", "A");
     TEST_MSG("Found: %c", c);
 }
@@ -151,6 +151,19 @@ void test_strrchr(void)
     TEST_CHECK(strcmp(str, "jour") == 0);
     TEST_MSG("Expected: jour");
     TEST_MSG("Found: %s", str);
+}
+
+void test_strlcpy(void)
+{
+    char buffer[5] = {0};
+    int len;
+    len = ft_strlcpy(buffer, "Bonjour", 5);
+    TEST_CHECK(strcmp(buffer, "Bonj") == 0);
+    TEST_MSG("Expected : Bonj");
+    TEST_MSG("Found: %s", buffer);
+    TEST_CHECK(len == strlen("Bonjour"));
+    TEST_MSG("Expected : %d", (int) strlen("Bonjour"));
+    TEST_MSG("Found: %d", len);
 }
 
 void test_strlcat(void)
@@ -444,7 +457,6 @@ TEST_LIST = {
    { "ft_putnbr_fd", test_putnbr_fd },
    { "ft_putendl_fd", test_putendl_fd },
    { "ft_calloc", test_calloc },
-
-
+   { "ft_strlcpy", test_strlcpy },
    { NULL, NULL }     /* zeroed record marking the end of the list */
 };
