@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+- Add loop test
+- try exhaustivness as smuch as possible
+- compare to ref function
+- Dump memory for mem function
+*/
+
 void test_strnstr(void)
 {
     char *str;
@@ -554,7 +561,7 @@ void test_lstiter(void)
     }
 }
 
-void test_lstfold()
+void test_lstfold(voids)
 {
     
 }
