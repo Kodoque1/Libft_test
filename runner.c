@@ -427,7 +427,137 @@ void test_putnbr_fd(void)
     unlink("test.txt");
 }
 
+void test_lstnew(void)
+{
+    char *content = ft_strdup("Bonjour");
+    t_list* list = NULL;
+    list = ft_lstnew(content);
+    TEST_CHECK(list != NULL);
+    TEST_MSG("Expected: %s", "Not Null");
+    TEST_CHECK(strcmp((char*) list->content, "Bonjour") == 0);
+    TEST_MSG("Expected: %s", "Bonjour");
+    TEST_MSG("Found: %s", (char*) list->content);
+    TEST_CHECK(list->next == NULL);
+    TEST_MSG("Expected: %s", "NULL");
+    TEST_MSG("Found: %p", list->next);
+    free(list->content);
+    free(list);
+}
 
+void test_lstadd_front(void)
+{
+    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    t_list* list;
+    list = NULL;
+    for(int i = 0; i < 4;i++)
+        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+    for(int i = 0; i < 4;i++)
+    {
+        TEST_CHECK(strcmp((char*) list->content, test_string[4 - i]) == 0);
+        TEST_MSG("Expected: %s", test_string[i]);
+        TEST_MSG("Found: %s", (char*) list->content);
+        list = list->next;
+    }
+}
+
+void test_lstsize(void)
+{
+    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    t_list* list;
+    int len;
+    list = NULL;
+    for(int i = 0; i < 4;i++)
+        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+    len = ft_lstsize(list);
+    TEST_CHECK(len == 4);
+    TEST_MSG("Expected: %d", 4);
+    TEST_MSG("Found: %d", len);
+}
+
+void test_lstlast(void)
+{
+    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    t_list* list;
+    t_list* last;
+    list = NULL;
+    for(int i = 0; i < 4;i++)
+        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+    last = ft_lstlast(list);
+    TEST_CHECK(strcmp((char*) last->content, "Bonjour") == 0);
+    TEST_MSG("Expected: %s", "Bonjour");
+    TEST_MSG("Found: %s", (char*) list->content);
+}
+
+void del(void *data)
+{
+    free(data);
+}
+
+void test_lstdel(void)
+{
+    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    t_list* list;
+    int len;
+    list = NULL;
+    for(int i = 0; i < 4;i++)
+        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+    ft_lstdel(&list, del);
+    len = ft_lstsize(list);
+    TEST_CHECK(len == 4);
+    TEST_MSG("Expected: %d", 4);
+    TEST_MSG("Found: %d", len);
+}
+
+void mod(void* data)
+{
+    char *ptr = (char*) data;
+    while(*ptr)
+    {
+        *ptr = ft_toupper(*ptr);
+        ptr++;
+    }
+}
+
+void test_lstiter(void)
+{
+    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *post_string = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
+    t_list* list;
+    list = NULL;
+    for(int i = 0; i < 4;i++)
+        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+    ft_lstiter(list, mod);
+    for(int i = 0; i < 4;i++)
+    {
+        TEST_CHECK(strcmp((char*) list->content, post_string[4 - i]) == 0);
+        TEST_MSG("Expected: %s", post_string[i]);
+        TEST_MSG("Found: %s", (char*) list->content);
+        list = list->next;
+    }
+}
+
+void test_lstiter(void)
+{
+    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *post_string = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
+    t_list* list;
+    list = NULL;
+    for(int i = 0; i < 4;i++)
+        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+    ft_lstmap(list, mod, del);
+    for(int i = 0; i < 4;i++)
+    {
+        TEST_CHECK(strcmp((char*) list->content, post_string[4 - i]) == 0);
+        TEST_MSG("Expected: %s", post_string[i]);
+        TEST_MSG("Found: %s", (char*) list->content);
+        list = list->next;
+    }
+}
+
+void test_lstfold()
+{
+    
+}
 
 TEST_LIST = {
    { "ft_strnstr", test_strnstr },
