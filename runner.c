@@ -5,22 +5,23 @@
 #include <stdlib.h>
 
 /*
-- Add loop test
-- try exhaustivness as smuch as possible
-- compare to ref function
-- Dump memory for mem function
+- Compare to the real function
 */
 
 void test_strnstr(void)
 {
     char *str;
-    str = ft_strnstr("bonjoujour tout le monde","jour",24);
-    TEST_CHECK(strcmp(str, "jour tout le monde") == 0);
-    TEST_MSG("Expected: jour tout le monde");
+    char *tgt;
+    char static_str[] = "bonjoujour tout le monde";
+    str = ft_strnstr(static_str, "jour",24);
+    tgt = strnstr(static_str, "jour",24);
+    TEST_CHECK(strcmp(str, tgt) == 0);
+    TEST_MSG("Expected: %s", tgt);
     TEST_MSG("Found: %s", str);
-    str = ft_strnstr("bonjoujour tout le monde","",24);
-    TEST_CHECK(strcmp(str, "bonjoujour tout le monde") == 0);
-    TEST_MSG("Expected: bonjoujour tout le monde");
+    str = ft_strnstr(static_str,"",24);
+    tgt = strnstr(static_str, "",24);
+    TEST_CHECK(strcmp(str, tgt) == 0);
+    TEST_MSG("Expected: %s", tgt);
     TEST_MSG("Found: %s", str);
     str = ft_strnstr("bonjoujour tout le monde","jour", 4);
     TEST_CHECK(str == NULL);
@@ -36,101 +37,127 @@ void test_atoi(void)
 void test_bzero(void)
 {
     char buffer[50];
-    char buffer1[50] = {0};
+    char buffer1[50];
     ft_bzero(buffer, 50);
-    int r = memcmp(buffer, buffer1, 50); 
-    TEST_CHECK(r == 0);
-    TEST_MSG("Expected same buffer, comparison result: %d", 1);
+    bzero(buffer1, 50);
+    TEST_CHECK(memcmp(buffer, buffer1, 50)  == 0);
+    TEST_DUMP("Expected:", buffer1, 50);
+    TEST_DUMP("Produced:", buffer, 50);
 }
 
 void test_isalnum(void)
 {
-    TEST_CHECK(ft_isalnum('0'));
-    TEST_MSG("0 is alnum");
-    TEST_CHECK(ft_isalnum('a'));
-    TEST_MSG("a is alnum");
-    TEST_CHECK(ft_isalnum('A'));
-    TEST_MSG("A is alnum");
-    TEST_CHECK(!ft_isalnum(';'));
-    TEST_MSG("; is alnum");
+    int chr;
+    int tgt;
+    for(int i = 0; i < 128; i++)
+    {
+        chr = ft_isalnum(i);
+        tgt = isalnum(i);
+        TEST_CHECK(!((chr > 0) ^ (tgt > 0)));
+        TEST_MSG("Expected: %d", tgt);
+        TEST_MSG("Expected: %d", chr);
+    }   
 }
 
 void test_isalpha(void)
 {
-    TEST_CHECK(ft_isalpha('a'));
-    TEST_MSG("a is alpha");
-    TEST_CHECK(ft_isalpha('A'));
-    TEST_MSG("A is alpha");
-    TEST_CHECK(!ft_isalpha('0'));
-    TEST_MSG("0 is not alpha");
+    int chr;
+    int tgt;
+    for(int i = 0; i < 128; i++)
+    {
+        chr = ft_isalpha(i);
+        tgt = isalpha(i);
+        TEST_CHECK(!((chr > 0) ^ (tgt > 0)));
+        TEST_MSG("Expected: %d", tgt);
+        TEST_MSG("Expected: %d", chr);
+    }
 }
 
 void test_isdigit(void)
 {
-    TEST_CHECK(ft_isdigit('0'));
-    TEST_MSG("0 is digit");
-    TEST_CHECK(!ft_isdigit('A'));
-    TEST_MSG("A is not digit");
+    int chr;
+    int tgt;
+    for(int i = 0; i < 128; i++)
+    {
+        chr = ft_isdigit(i);
+        tgt = isdigit(i);
+        TEST_CHECK(!((chr > 0) ^ (tgt > 0)));
+        TEST_MSG("Expected: %d", tgt);
+        TEST_MSG("Expected: %d", chr);
+    }
 }
 
 void test_isprint(void)
 {
-    TEST_CHECK(ft_isprint('A'));
-    TEST_MSG("A is print");
-    TEST_CHECK(!ft_isprint(20));
-    TEST_MSG("Value 20 is not print");
+    int chr;
+    int tgt;
+    for(int i = 0; i < 128; i++)
+    {
+        chr = ft_isprint(i);
+        tgt = isprint(i);
+        TEST_CHECK(!((chr > 0) ^ (tgt > 0)));
+        TEST_MSG("Expected: %d", tgt);
+        TEST_MSG("Expected: %d", chr);
+    }
 }
 
 void test_tolower(void)
 {
-    char c;
-    c = ft_tolower('\n');
-    TEST_CHECK(ft_tolower('\n') == '\n');
-    TEST_MSG("Expected: %s", "\\n");
-    TEST_MSG("Found: %c", c);
-    c = ft_tolower('a');
-    TEST_CHECK_(c == 'a', "Checking invariant");
-    TEST_MSG("Expected: %s", "a");
-    TEST_MSG("Found: %c", c);
-    c = ft_tolower('A');
-    TEST_CHECK_( c == 'a', "Checking conversion");
-    TEST_MSG("Expected: %s", "a");
-    TEST_MSG("Found: %c", c);
+    int chr;
+    int tgt;
+    for(int i = 0; i < 128; i++)
+    {
+        chr = ft_tolower(i);
+        tgt = tolower(i);
+        TEST_CHECK(chr == tgt);
+        TEST_MSG("Expected: %d", tgt);
+        TEST_MSG("Expected: %d", chr);
+    }
+    chr = ft_tolower(EOF);
+    TEST_CHECK(chr == -1);
+    TEST_MSG("Expected: %d", tgt);
+    TEST_MSG("Expected: %d", chr);
 }
 
 void test_toupper(void)
 {
-    char c;
-    c = ft_toupper('\n');
-    TEST_CHECK(c == '\n');
-    TEST_MSG("Expected: %s", "\\n");
-    TEST_MSG("Found: %c", c);
-    c = ft_toupper('A');
-    TEST_CHECK_( c == 'A', "Checking invariant");
-    TEST_MSG("Expected: %s", "A");
-    TEST_MSG("Found: %c", c);
-    c = ft_toupper('a');
-    TEST_CHECK_(c == 'A', "Checking conversion");
-    TEST_MSG("Expected: %s", "A");
-    TEST_MSG("Found: %c", c);
+    int chr;
+    int tgt;
+    for(int i = 0; i < 128; i++)
+    {
+        chr = ft_toupper(i);
+        tgt = toupper(i);
+        TEST_CHECK(chr == tgt);
+        TEST_MSG("Expected: %d", tgt);
+        TEST_MSG("Expected: %d", chr);
+    }
+    chr = ft_toupper(EOF);
+    TEST_CHECK(chr == -1);
+    TEST_MSG("Expected: %d", tgt);
+    TEST_MSG("Expected: %d", chr);
 }
 
 void test_memset(void)
 {
-    char buffer[5];
-    char buffer2[5] = {5,5,5,5,5};
-    ft_memset(buffer, 5, 5);
-    TEST_CHECK(memcmp(buffer, buffer2, 5) == 0);
-    TEST_MSG("Expected {5,5,5,5,5}");
+    char buf[5];
+    char tgt[5];
+    ft_memset(buf, 5, 5);
+    memset(tgt, 5, 5);
+    TEST_CHECK(memcmp(buf, tgt, 5) == 0);
+    TEST_DUMP("Expected:", tgt, 5);
+    TEST_DUMP("Produced:", buf, 5);
 }
 
 void test_memcpy(void)
 {
-    char buffer[5];
-    char buffer2[5] = {1,2,3,4,5};
-    ft_memcpy(buffer, buffer2, 5);
-    TEST_CHECK(memcmp(buffer, buffer2, 5) == 0);
-    TEST_MSG("Expected {1,2,3,4,5}");
+    char buf[5];
+    char tgt[5];
+    char static_tgt[5] = {1,2,3,4,5};
+    ft_memcpy(buf, static_tgt, 5);
+    memcpy(tgt, static_tgt, 5);
+    TEST_CHECK(memcmp(buf, tgt, 5) == 0);
+    TEST_DUMP("Expected:", tgt, 5);
+    TEST_DUMP("Produced:", buf, 5);
 }
 
 void test_memmove(void)
@@ -139,15 +166,19 @@ void test_memmove(void)
     char buffer1[5] = {1,2,5,5,5};
     ft_memmove(buffer1, buffer1 + 2, 3);
     TEST_CHECK(memcmp(buffer, buffer1, 3) == 0);
-    TEST_MSG("Expected {5,5,5}");
+    TEST_DUMP("Expected:", buffer, 3);
+    TEST_DUMP("Produced:", buffer1, 3);
 }
 
 void test_strchr(void)
 {
     char *str;
+    char *tgt;
+    char static_chr = "bonjoujour";
     str = ft_strchr("bonjoujour",'j');
+    tgt = strchr("bonjoujour",'j');
     TEST_CHECK(strcmp(str, "joujour") == 0);
-    TEST_MSG("Expected: joujour");
+    TEST_MSG("Expected: %s", );
     TEST_MSG("Found: %s", str);
 }
 
