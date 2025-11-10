@@ -14,7 +14,7 @@ CFLAGS := -g3
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) -LLibft -lft -lbsd -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -LLibft -lft -lbsd -o $(NAME)
 
 $(LIBFT):
 	cd $(LIBFT_DIR); make;

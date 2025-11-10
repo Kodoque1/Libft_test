@@ -7,6 +7,9 @@
 
 /*
 - Compare to the real function
+- Valgrind:
+- substr
+- strjoin
 */
 
 void test_strnstr(void)
@@ -187,50 +190,72 @@ void test_strchr(void)
     char *str;
     char *tgt;
     char static_chr[] = "bonjoujour";
-    str = ft_strchr("bonjoujour",'j');
-    tgt = strchr("bonjoujour",'j');
-    TEST_CHECK(strcmp(str, "joujour") == 0);
-    TEST_MSG("Expected: %s", "joujour");
+    str = ft_strchr(static_chr,'j');
+    tgt = strchr(static_chr,'j');
+    TEST_CHECK(strcmp(str, tgt) == 0);
+    TEST_MSG("Expected: %s", tgt);
     TEST_MSG("Found: %s", str);
 }
 
 void test_strrchr(void)
 {
     char *str;
-    str = ft_strrchr("bonjoujour",'j');
-    TEST_CHECK(strcmp(str, "jour") == 0);
-    TEST_MSG("Expected: %s", "jour");
+    char *tgt;
+    char static_chr[] = "bonjoujour";
+    str = ft_strrchr(static_chr,'j');
+    tgt = strrchr(static_chr,'j');
+    TEST_CHECK(strcmp(str, tgt) == 0);
+    TEST_MSG("Expected: %s", tgt);
     TEST_MSG("Found: %s", str);
 }
 
 void test_strlcpy(void)
 {
     char buffer[5] = {0};
+    char tgt[5] = {0};
     int len;
+    int len_tgt;
     len = ft_strlcpy(buffer, "Bonjour", 5);
-    TEST_CHECK(strcmp(buffer, "Bonj") == 0);
-    TEST_MSG("Expected : Bonj");
+    len_tgt = ft_strlcpy(tgt, "Bonjour", 5);
+    TEST_CHECK(strcmp(buffer, tgt) == 0);
+    TEST_MSG("Expected : %s", tgt);
     TEST_MSG("Found: %s", buffer);
-    TEST_CHECK(len == strlen("Bonjour"));
-    TEST_MSG("Expected : %d", (int) strlen("Bonjour"));
+    TEST_CHECK(len == len_tgt);
+    TEST_MSG("Expected : %d", len_tgt);
+    TEST_MSG("Found: %d", len);
+    ft_bzero(buffer, 5);
+    ft_bzero(tgt, 5);
+    len = ft_strlcpy(buffer, "Bonjour", 0);
+    len_tgt = ft_strlcpy(tgt, "Bonjour", 0);
+    TEST_CHECK(strcmp(buffer, tgt) == 0);
+    TEST_MSG("Expected : %s", tgt);
+    TEST_MSG("Found: %s", buffer);
+    TEST_CHECK(len == len_tgt);
+    TEST_MSG("Expected : %d", len_tgt);
     TEST_MSG("Found: %d", len);
 }
 
 void test_strlcat(void)
 {
     char buffer[10] = {0};
-    char buffer1[10] = {0};
-    int len, len1;
+    char tgt[10] = {0};
+    int len, len_tgt;
     strcpy(buffer,"Bon");
+    strcpy(tgt,"Bon");
     len = ft_strlcat(buffer, "jour", 5);
-    TEST_CHECK(strcmp(buffer, "Bonj") == 0);
-    TEST_MSG("Expected : Bonj");
+    len_tgt = strlcat(tgt, "jour", 5);
+    TEST_CHECK(strcmp(buffer, tgt) == 0);
+    TEST_MSG("Expected : %s", tgt);
     TEST_MSG("Found: %s", buffer);
-    strcpy(buffer1,"Bon");
-    len1 = ft_strlcat(buffer1, "jour", 5);
-    TEST_CHECK(len == len1);
-    TEST_MSG("Expected : %d", len1);
-    TEST_MSG("Found: %d", len);
+    ft_bzero(buffer, 0);
+    ft_bzero(tgt, 0);
+    strcpy(buffer,"Bon");
+    strcpy(tgt,"Bon");
+    len = ft_strlcat(buffer, "jour", 0);
+    len_tgt = strlcat(tgt, "jour", 0);
+    TEST_CHECK(strcmp(buffer, tgt) == 0);
+    TEST_MSG("Expected : %s", tgt);
+    TEST_MSG("Found: %s", buffer);
 }
 
 void test_strlen(void)
@@ -245,9 +270,14 @@ void test_strlen(void)
 void test_strnlen(void)
 {
     int len = ft_strnlen("Bonjour", 3);
-    int len1 = strnlen("Bonjour" , 3);
-    TEST_CHECK(len = len1);
-    TEST_MSG("Expected : %d", len1);
+    int len_tgt = strnlen("Bonjour" , 3);
+    TEST_CHECK(len = len_tgt);
+    TEST_MSG("Expected : %d", len_tgt);
+    TEST_MSG("Found: %d", len);
+    len = ft_strnlen("Bonjour", 15);
+    len_tgt = strnlen("Bonjour" , 15);
+    TEST_CHECK(len = len_tgt);
+    TEST_MSG("Expected : %d", len_tgt);
     TEST_MSG("Found: %d", len);
 }
 
@@ -268,8 +298,10 @@ void test_strncmp(void)
 void test_strdup(void)
 {
     char *buffer = ft_strdup("Bonjour");
-    TEST_CHECK(strcmp(buffer, "Bonjour") == 0);
-    TEST_MSG("Expected Bonjour");
+    char *tgt = strdup("Bonjour");
+    TEST_CHECK(strcmp(buffer, tgt) == 0);
+    TEST_MSG("Expected : %s", tgt);
+    TEST_MSG("Found : %s", buffer);
 }
 
 char test_toloweri1(unsigned int i, char c)
@@ -313,7 +345,7 @@ void test_substr(void)
     free(buffer);
     free(buffer1);
     buffer = ft_strdup("Bonjour tout le monde");
-    buffer1 = ft_substr(buffer, 22, 22);
+    buffer1 = ft_substr(buffer, 21, 0);
     TEST_CHECK(strcmp(buffer1, "") == 0);
     TEST_MSG("Expected empty string");
     TEST_MSG("Found: %s", buffer1);
@@ -321,10 +353,16 @@ void test_substr(void)
 
 void test_strjoin(void)
 {
-    char *buffer = ft_strjoin("tata","toto");
-    TEST_CHECK(strcmp(buffer, "tatatoto") == 0);
-    TEST_MSG("Expected bOnJoUr");
+    char *buffer = ft_strjoin("tata","totoo");
+    TEST_CHECK(strcmp(buffer, "tatatotoo") == 0);
+    TEST_MSG("Expected : %s", "tatatotoo");
     TEST_MSG("Found: %s", buffer);
+    free(buffer);
+    buffer = ft_strjoin("","totoo");
+    TEST_CHECK(strcmp(buffer, "totoo") == 0);
+    TEST_MSG("Expected : %s", "totoo");
+    TEST_MSG("Found: %s", buffer);
+    free(buffer);
 }
 
 void test_strtrim(void)
@@ -561,7 +599,7 @@ void del(void *data)
 
 void test_lstclear(void)
 {
-    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *test_string[] = {ft_strdup("Bonjour"), ft_strdup("Hello"), ft_strdup("Hola"), ft_strdup("Salam")};
     t_list* list;
     int len;
     list = NULL;
@@ -597,7 +635,7 @@ void *mod_map(void* data)
 
 void test_lstiter(void)
 {
-    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *test_string[] = {ft_strdup("Bonjour"), ft_strdup("Hello"), ft_strdup("Hola"), ft_strdup("Salam")};
     char *post_string[] = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
     t_list* list;
     list = NULL;
@@ -606,7 +644,7 @@ void test_lstiter(void)
     ft_lstiter(list, mod);
     for(int i = 0; i < 4;i++)
     {
-        TEST_CHECK(strcmp((char*) list->content, post_string[4 - i]) == 0);
+        TEST_CHECK(strcmp((char*) list->content, post_string[3 - i]) == 0);
         TEST_MSG("Expected: %s", post_string[i]);
         TEST_MSG("Found: %s", (char*) list->content);
         list = list->next;
@@ -615,16 +653,16 @@ void test_lstiter(void)
 
 void test_lstmap(void)
 {
-    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *test_string[] = {ft_strdup("Bonjour"), ft_strdup("Hello"), ft_strdup("Hola"), ft_strdup("Salam")};
     char *post_string[] = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
     t_list* list;
     list = NULL;
-    for(int i = 0; i < 4;i++)
+    for(int i = 0; i < 4; i++)
         ft_lstadd_front(&list, ft_lstnew(test_string[i]));
     ft_lstmap(list, mod_map, del);
     for(int i = 0; i < 4;i++)
     {
-        TEST_CHECK(strcmp((char*) list->content, post_string[4 - i]) == 0);
+        TEST_CHECK(strcmp((char*) list->content, post_string[3 - i]) == 0);
         TEST_MSG("Expected: %s", post_string[i]);
         TEST_MSG("Found: %s", (char*) list->content);
         list = list->next;
