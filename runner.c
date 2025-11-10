@@ -3,6 +3,7 @@
 #include<limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <bsd/string.h>
 
 /*
 - Compare to the real function
@@ -56,7 +57,7 @@ void test_isalnum(void)
         TEST_CHECK(!((chr > 0) ^ (tgt > 0)));
         TEST_MSG("Expected: %d", tgt);
         TEST_MSG("Expected: %d", chr);
-    }   
+    }
 }
 
 void test_isalpha(void)
@@ -162,23 +163,34 @@ void test_memcpy(void)
 
 void test_memmove(void)
 {
-    char buffer[5] = {5,5,5};
-    char buffer1[5] = {1,2,5,5,5};
-    ft_memmove(buffer1, buffer1 + 2, 3);
-    TEST_CHECK(memcmp(buffer, buffer1, 3) == 0);
-    TEST_DUMP("Expected:", buffer, 3);
-    TEST_DUMP("Produced:", buffer1, 3);
+    char buffer[5] = {1,2,3,4,5};
+    char tgt[5] = {1,2,3,4,5};
+    ft_memmove(buffer, buffer + 2, 3);
+    memmove(tgt, tgt + 2, 3);
+    TEST_CHECK(memcmp(buffer, tgt, 3) == 0);
+    TEST_DUMP("Expected:", tgt, 3);
+    TEST_DUMP("Produced:", buffer, 3);
+    ft_memmove(buffer + 2, buffer, 3);
+    memmove(tgt + 2, tgt, 3);
+    TEST_CHECK(memcmp(buffer, tgt, 3) == 0);
+    TEST_DUMP("Expected:", tgt, 3);
+    TEST_DUMP("Produced:", buffer, 3);
+    ft_memmove(buffer, buffer, 3);
+    memmove(tgt, tgt, 3);
+    TEST_CHECK(memcmp(buffer, tgt, 3) == 0);
+    TEST_DUMP("Expected:", tgt, 3);
+    TEST_DUMP("Produced:", buffer, 3);
 }
 
 void test_strchr(void)
 {
     char *str;
     char *tgt;
-    char static_chr = "bonjoujour";
+    char static_chr[] = "bonjoujour";
     str = ft_strchr("bonjoujour",'j');
     tgt = strchr("bonjoujour",'j');
     TEST_CHECK(strcmp(str, "joujour") == 0);
-    TEST_MSG("Expected: %s", );
+    TEST_MSG("Expected: %s", "joujour");
     TEST_MSG("Found: %s", str);
 }
 
@@ -187,7 +199,7 @@ void test_strrchr(void)
     char *str;
     str = ft_strrchr("bonjoujour",'j');
     TEST_CHECK(strcmp(str, "jour") == 0);
-    TEST_MSG("Expected: jour");
+    TEST_MSG("Expected: %s", "jour");
     TEST_MSG("Found: %s", str);
 }
 
@@ -269,7 +281,7 @@ char test_toloweri1(unsigned int i, char c)
 
 void test_strmapi(void)
 {
-    
+
     char *buffer = (char*) ft_strmapi("Bonjour", test_toloweri1);
     TEST_CHECK(strcmp(buffer, "Bonjour") == 0);
     TEST_MSG("Expected Bonjour");
@@ -484,15 +496,15 @@ void test_lstnew(void)
 
 void test_lstadd_front(void)
 {
-    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
     t_list* list;
     list = NULL;
     for(int i = 0; i < 4;i++)
-        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+        ft_lstadd_front(&list, ft_lstnew(test_string[i]));
     for(int i = 0; i < 4;i++)
     {
-        TEST_CHECK(strcmp((char*) list->content, test_string[4 - i]) == 0);
-        TEST_MSG("Expected: %s", test_string[i]);
+        TEST_CHECK(strcmp((char*) list->content, test_string[3 - i]) == 0);
+        TEST_MSG("Expected: %s", test_string[3 - i]);
         TEST_MSG("Found: %s", (char*) list->content);
         list = list->next;
     }
@@ -500,12 +512,12 @@ void test_lstadd_front(void)
 
 void test_lstsize(void)
 {
-    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
     t_list* list;
     int len;
     list = NULL;
     for(int i = 0; i < 4;i++)
-        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+        ft_lstadd_front(&list, ft_lstnew(test_string[i]));
     len = ft_lstsize(list);
     TEST_CHECK(len == 4);
     TEST_MSG("Expected: %d", 4);
@@ -514,16 +526,32 @@ void test_lstsize(void)
 
 void test_lstlast(void)
 {
-    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
     t_list* list;
     t_list* last;
     list = NULL;
     for(int i = 0; i < 4;i++)
-        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+        ft_lstadd_front(&list, ft_lstnew(test_string[i]));
     last = ft_lstlast(list);
     TEST_CHECK(strcmp((char*) last->content, "Bonjour") == 0);
     TEST_MSG("Expected: %s", "Bonjour");
     TEST_MSG("Found: %s", (char*) list->content);
+}
+
+void test_lstadd_back(void)
+{
+    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
+    t_list* list;
+    list = NULL;
+    for(int i = 0; i < 4;i++)
+        ft_lstadd_back(&list, ft_lstnew(test_string[i]));
+    for(int i = 0; i < 4;i++)
+    {
+        TEST_CHECK(strcmp((char*) list->content, test_string[i]) == 0);
+        TEST_MSG("Expected: %s", test_string[i]);
+        TEST_MSG("Found: %s", (char*) list->content);
+        list = list->next;
+    }
 }
 
 void del(void *data)
@@ -531,18 +559,18 @@ void del(void *data)
     free(data);
 }
 
-void test_lstdel(void)
+void test_lstclear(void)
 {
-    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
     t_list* list;
     int len;
     list = NULL;
     for(int i = 0; i < 4;i++)
-        ft_lstadd_front(&list, ft_lstnew(test_string + i));
-    ft_lstdel(&list, del);
+        ft_lstadd_front(&list, ft_lstnew(test_string[i]));
+    ft_lstclear(&list, del);
     len = ft_lstsize(list);
-    TEST_CHECK(len == 4);
-    TEST_MSG("Expected: %d", 4);
+    TEST_CHECK(len == 0);
+    TEST_MSG("Expected: %d", 0);
     TEST_MSG("Found: %d", len);
 }
 
@@ -556,14 +584,25 @@ void mod(void* data)
     }
 }
 
+void *mod_map(void* data)
+{
+    char *ptr = (char*) data;
+    while(*ptr)
+    {
+        *ptr = ft_toupper(*ptr);
+        ptr++;
+    }
+    return (data);
+}
+
 void test_lstiter(void)
 {
-    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
-    char *post_string = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
+    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *post_string[] = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
     t_list* list;
     list = NULL;
     for(int i = 0; i < 4;i++)
-        ft_lstadd_front(&list, ft_lstnew(test_string + i));
+        ft_lstadd_front(&list, ft_lstnew(test_string[i]));
     ft_lstiter(list, mod);
     for(int i = 0; i < 4;i++)
     {
@@ -574,15 +613,15 @@ void test_lstiter(void)
     }
 }
 
-void test_lstiter(void)
+void test_lstmap(void)
 {
-    char *test_string = {"Bonjour", "Hello", "Hola", "Salam"};
-    char *post_string = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
+    char *test_string[] = {"Bonjour", "Hello", "Hola", "Salam"};
+    char *post_string[] = {"BONJOUR", "HELLO", "HOLA", "SALAM"};
     t_list* list;
     list = NULL;
     for(int i = 0; i < 4;i++)
-        ft_lstadd_front(&list, ft_lstnew(test_string + i));
-    ft_lstmap(list, mod, del);
+        ft_lstadd_front(&list, ft_lstnew(test_string[i]));
+    ft_lstmap(list, mod_map, del);
     for(int i = 0; i < 4;i++)
     {
         TEST_CHECK(strcmp((char*) list->content, post_string[4 - i]) == 0);
@@ -590,11 +629,6 @@ void test_lstiter(void)
         TEST_MSG("Found: %s", (char*) list->content);
         list = list->next;
     }
-}
-
-void test_lstfold(voids)
-{
-    
 }
 
 TEST_LIST = {
@@ -626,5 +660,13 @@ TEST_LIST = {
    { "ft_putendl_fd", test_putendl_fd },
    { "ft_calloc", test_calloc },
    { "ft_strlcpy", test_strlcpy },
+   { "ft_lstnew", test_lstnew },
+   { "ft_lstadd_front", test_lstadd_front},
+   { "ft_lstiter", test_lstiter},
+   { "ft_lstmap", test_lstmap},
+   { "ft_lstclear", test_lstclear},
+   { "ft_lstadd_back", test_lstadd_back},
+   { "ft_lstlast", test_lstlast},
+   { "ft_lstsize", test_lstsize},
    { NULL, NULL }     /* zeroed record marking the end of the list */
 };

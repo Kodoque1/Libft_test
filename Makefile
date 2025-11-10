@@ -5,7 +5,7 @@ LIBFT := libft.a
 OBJ  := $(SRC:.c=.o)
 
 RM := rm -f
-CC := cc 
+CC := cc
 CFLAGS := -g3
 
 %.o : %.c
@@ -14,13 +14,14 @@ CFLAGS := -g3
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) -LLibft -lft -o $(NAME)
+	$(CC) $(OBJ) -LLibft -lft -lbsd -o $(NAME)
 
 $(LIBFT):
 	cd $(LIBFT_DIR); make;
 
 # === CLEANING UP ===
 clean:
+	cd $(LIBFT_DIR); make fclean
 	$(RM) $(OBJ) $(OBJ:.o=.d)
 
 fclean: clean
