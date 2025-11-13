@@ -16,7 +16,7 @@ void test_strnstr(void)
 {
     char *str;
     char *tgt;
-    char static_str[] = "bonjoujour tout le monde";
+    char static_str[] = "bonjoujjour tout le monde";
     str = ft_strnstr(static_str, "jour",24);
     tgt = strnstr(static_str, "jour",24);
     TEST_CHECK(strcmp(str, tgt) == 0);
@@ -30,6 +30,11 @@ void test_strnstr(void)
     str = ft_strnstr("bonjoujour tout le monde","jour", 4);
     TEST_CHECK(str == NULL);
     TEST_MSG("jour should not have been found");
+    str = ft_strnstr(static_str, "jour",-1);
+    tgt = strnstr(static_str, "jour",-1);
+    TEST_CHECK(strcmp(str, tgt) == 0);
+    TEST_MSG("Expected: %s", tgt);
+    TEST_MSG("Found: %s", str);
 }
 
 void test_atoi(void)
@@ -328,13 +333,12 @@ void test_substr(void)
     TEST_CHECK(strcmp(buffer1, "tout") == 0);
     TEST_MSG("Expected bOnJoUr");
     TEST_MSG("Found: %s", buffer1);
-    free(buffer);
     free(buffer1);
-    buffer = ft_strdup("Bonjour tout le monde");
     buffer1 = ft_substr(buffer, 21, 0);
     TEST_CHECK(strcmp(buffer1, "") == 0);
     TEST_MSG("Expected empty string");
     TEST_MSG("Found: %s", buffer1);
+    free(buffer1);
 }
 
 void test_strjoin(void)
