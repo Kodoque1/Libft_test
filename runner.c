@@ -430,7 +430,15 @@ void test_calloc(void)
     char *buf = calloc(2,5);
     char buf_test[10] = {0};
     TEST_CHECK(memcmp(buf, buf_test, 10) == 0);
-    TEST_MSG("Expected: %s", "NULL buffer");
+    TEST_DUMP("Expected: ", buf_test, 10);
+    TEST_DUMP("Found: ", buf_test, 10);
+    free(buf);
+    buf = calloc(0,5);
+    TEST_CHECK(buf == NULL);
+    TEST_MSG("Expected: %s", "NULL pointer");
+    buf = calloc(__SIZE_MAX__,5);
+    TEST_CHECK(buf == NULL);
+    TEST_MSG("Expected: %s", "NULL pointer");
 }
 
 void test_putchar_fd(void)
