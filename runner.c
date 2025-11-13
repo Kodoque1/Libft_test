@@ -267,20 +267,6 @@ void test_strlen(void)
     TEST_MSG("Found: %d", len);
 }
 
-void test_strnlen(void)
-{
-    int len = ft_strnlen("Bonjour", 3);
-    int len_tgt = strnlen("Bonjour" , 3);
-    TEST_CHECK(len = len_tgt);
-    TEST_MSG("Expected : %d", len_tgt);
-    TEST_MSG("Found: %d", len);
-    len = ft_strnlen("Bonjour", 15);
-    len_tgt = strnlen("Bonjour" , 15);
-    TEST_CHECK(len = len_tgt);
-    TEST_MSG("Expected : %d", len_tgt);
-    TEST_MSG("Found: %d", len);
-}
-
 void test_strncmp(void)
 {
     TEST_CHECK(ft_strncmp("ABC", "ABC", 3) == 0);
@@ -371,6 +357,11 @@ void test_strtrim(void)
     TEST_CHECK(strcmp(buffer, "t t") == 0);
     TEST_MSG("Expected \"t t\"");
     TEST_MSG("Found: %s", buffer);
+    free(buffer);
+    buffer = ft_strtrim(""," ");
+    TEST_CHECK(strcmp(buffer, "") == 0);
+    TEST_MSG("Expected \"\"");
+    TEST_MSG("Found: %s", buffer);
 }
 
 void compare_array(char **a1, char **a2)
@@ -427,16 +418,16 @@ void test_itoa(void)
 
 void test_calloc(void)
 {
-    char *buf = calloc(2,5);
+    char *buf = ft_calloc(2,5);
     char buf_test[10] = {0};
     TEST_CHECK(memcmp(buf, buf_test, 10) == 0);
     TEST_DUMP("Expected: ", buf_test, 10);
     TEST_DUMP("Found: ", buf_test, 10);
     free(buf);
-    buf = calloc(0,5);
+    buf = ft_calloc(0,5);
     TEST_CHECK(buf == NULL);
     TEST_MSG("Expected: %s", "NULL pointer");
-    buf = calloc(__SIZE_MAX__,5);
+    buf = ft_calloc(__SIZE_MAX__,5);
     TEST_CHECK(buf == NULL);
     TEST_MSG("Expected: %s", "NULL pointer");
 }
@@ -693,7 +684,6 @@ TEST_LIST = {
    { "ft_strrchr", test_strrchr },
    { "ft_strlcat", test_strlcat },
    { "ft_strlen", test_strlen },
-   { "ft_strnlen", test_strnlen },
    { "ft_strdup", test_strdup },
    { "ft_substr", test_substr },
    { "ft_strjoin", test_strjoin },
