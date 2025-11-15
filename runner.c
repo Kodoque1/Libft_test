@@ -18,11 +18,13 @@ void test_strnstr(void)
     char *tgt;
     char static_str[] = "bonjoujjour tout le monde";
     str = ft_strnstr(static_str, "jour",24);
+    TEST_ASSERT(str != NULL);
     tgt = strnstr(static_str, "jour",24);
     TEST_CHECK(strcmp(str, tgt) == 0);
     TEST_MSG("Expected: %s", tgt);
     TEST_MSG("Found: %s", str);
     str = ft_strnstr(static_str,"",24);
+    TEST_ASSERT(str != NULL);
     tgt = strnstr(static_str, "",24);
     TEST_CHECK(strcmp(str, tgt) == 0);
     TEST_MSG("Expected: %s", tgt);
@@ -30,8 +32,10 @@ void test_strnstr(void)
     str = ft_strnstr("bonjoujour tout le monde","jour", 4);
     TEST_CHECK(str == NULL);
     TEST_MSG("jour should not have been found");
-    str = ft_strnstr(static_str, "jour",-1);
-    tgt = strnstr(static_str, "jour",-1);
+    char haystack[30] = "aaabcabcd";
+    str = ft_strnstr(haystack, "aabc",-1);
+    TEST_ASSERT(str != NULL);
+    tgt = strnstr(haystack, "aabc",-1);
     TEST_CHECK(strcmp(str, tgt) == 0);
     TEST_MSG("Expected: %s", tgt);
     TEST_MSG("Found: %s", str);
@@ -674,6 +678,7 @@ void test_lstmap(void)
 
 TEST_LIST = {
    { "ft_strnstr", test_strnstr },
+   { "ft_strncmp", test_strncmp },
    { "ft_atoi", test_atoi },
    { "ft_bzero", test_bzero },
    { "ft_isalnum", test_isalnum },
